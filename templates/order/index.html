@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/order.css' %}">
+    <script src="{% static 'js/order.js' %}"></script>
+    <script src="{% static 'js/copy.js' %}"></script>
+</head>
+<body class="bg-gray-100 p-4">
+    <div class="container mx-auto">
+        {% include 'partials/message.html' %}
+        {% include 'action/status.html' %}
+
+        {% if orders %}
+            {% include 'order/pending_bar.html' %}
+
+
+            <div class="scrollable">
+                <div class="table-container">
+                    <table class="min-w-full bg-white border border-gray-300 shadow-lg rounded-lg text-sm"> <!-- Small text size for the table -->
+                        <thead>
+                            <tr class="bg-gray-800 text-white text-xs"> <!-- Extra small text size for the header -->
+                                <th class="py-2 px-4"></th>
+                                <th class="py-2 px-4">Action</th>
+                                <th class="py-2 px-4">Order ID</th>
+                                <th class="py-2 px-4">Customer Name</th>
+                                <th class="py-2 px-4">Address</th>
+                                <th class="py-2 px-4">Product</th>
+                                <th class="py-2 px-4">Quantity</th>
+                                <th class="py-2 px-4">Total Price</th>
+                                <th class="py-2 px-4">Order Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody">
+                            {% for order in orders %}
+                                <tr class="border-t border-gray-300" data-order-id="{{ order.order_id }}">
+                                    <td class="py-2 px-4">
+                                        <input type="radio" name="selected_order" value="{{ order.order_id }}" class="form-radio h-5 w-5 text-blue-600" onclick="selectOrder(this)" />
+                                    </td>
+                                    <td class="py-2 px-4">
+                                        {% include 'action/action.html' %}
+                                    </td>
+                                    <td class="py-2 px-4">
+                                        <span id="order-id-{{ order.id }}">{{ order.order_id }}</span>
+                                        <button id="copy-button-{{ order.id }}" class="ml-2" onclick="copyOrderDetails('{{ order.id }}')">
+                                            <i class="fa fa-copy text-xs text-gray-600" ></i> <!-- Adjusted FontAwesome icon size and color -->
+                                        </button>
+                                    </td>
+                                    
+                                    <td class="py-2 px-4">
+                                        <strong id="customer-name-{{ order.id }}" class="text-xs">{{ order.customer_name }}</strong><br>
+                                        <div class="flex items-center text-xs text-gray-600">
+                                            <i class="fab fa-whatsapp text-xs mr-1"></i> 
+                                            <span id="whatsapp-number-{{ order.id }}">{{ order.whatsapp_number }}</span>
+                                        </div>
+                                        <div class="flex items-center text-xs text-gray-600">
+                                            <i class="fas fa-phone-alt text-xs mr-1"></i> 
+                                            <span id="phone-number-{{ order.id }}">{{ order.phone_number }}</span>
+                                        </div>
+                                        <div class="flex items-center text-xs text-gray-600">
+                                            <i class="fas fa-envelope text-xs mr-1"></i> 
+                                            <span id="email-{{ order.id }}">{{ order.email }}</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-2 px-4">
+                                        <span id="address-{{ order.id }}">{{ order.address }}</span>
+                                        <div class="flex items-center space-x-1 text-xs text-gray-600"> 
+                                            <i class="fas fa-map-marker-alt text-xs"></i> 
+                                            <span id="state-{{ order.id }}">{{ order.state }}{{ order.state_or_region }}</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-2 px-4" id="product-name-{{ order.id }}">{{ order.product_entry.product.name }}</td>
+                                    <td class="py-2 px-4" id="quantity-{{ order.id }}">{{ order.product_entry.quantity }}</td>
+                                    <td class="py-2 px-4" id="total-price-{{ order.id }}">₦{{ order.total_price }}</td>
+                                    <td class="py-2 px-4">{{ order.order_date|date:"Y-m-d" }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                        
+                    </table>
+                </div>
+            {% else %}
+
+             {%include 'order/pending_bar.html'%}
+
+            
+                            
+        </div>
+            {% endif %}
+            </div>
+        </div>
+        
+        
+    </body>
+    
+</html>
+{% endblock %}
+
+

@@ -1,0 +1,50 @@
+<!-- Top Bar -->
+<div class="flex justify-between items-center mb-6 p-4 shadow-md bg-[#ffeddf]/60 backdrop-blur-lg sticky top-0 w-full z-50">
+    <!-- Welcome Message -->
+    <div class="flex items-center space-x-3">
+        <img src="https://via.placeholder.com/40" alt="User Image" class="w-10 h-10 rounded-full object-cover">
+        <div class="text-[#0d1321]">
+            <p class="text-lg font-medium">Welcome, <span class="font-bold">{{ user.username }}</span></p>
+            <p class="text-sm text-[#0d1321] opacity-70">Here's a quick overview</p>
+        </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="flex items-center space-x-2">
+        <input type="text" placeholder="Search..." class="px-4 py-2 border border-[#0d1321] rounded-lg bg-transparent text-[#0d1321] placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#0d1321] transition duration-200">
+        <button class="bg-[#0d1321] text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition duration-200">Search</button>
+    </div>
+
+    <!-- User Options -->
+    <div class="relative">
+        <button class="flex items-center space-x-2 bg-transparent text-[#0d1321] px-4 py-2 rounded-lg focus:outline-none hover:bg-[#0d1321] hover:text-white transition duration-200">
+            <span>Options</span>
+            <span class="block w-4 h-4 border-t-2 border-[#0d1321] transform transition-transform duration-200" style="transform: rotate(90deg);"></span>
+        </button>
+        <!-- Dropdown Menu -->
+        <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg hidden dropdown-menu"> <!-- Added dropdown-menu class -->
+            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-[#ffeddf]">Profile</a>
+            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-[#ffeddf]">Settings</a>
+            <a href="{% url 'account_logout' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-[#ffeddf]">Logout</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const optionsButton = document.querySelector('.relative > button');
+        const dropdownMenu = document.querySelector('.dropdown-menu'); // Select the dropdown menu with the class
+
+        optionsButton.addEventListener('click', function(e) {
+            e.stopPropagation(); // Prevent the click from bubbling up
+            dropdownMenu.classList.toggle('hidden');
+        });
+        
+        // Close the dropdown if clicked outside
+        window.addEventListener('click', function(e) {
+            if (!optionsButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.classList.add('hidden');
+            }
+        });
+    });
+</script>

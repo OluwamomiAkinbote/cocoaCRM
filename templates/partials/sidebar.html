@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Free CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* Active state styles */
+        .active {
+            background-color: #7b2c4d;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+<div class="flex-none w-52 bg-[#561f37] ">
+    <!-- Admin Panel Header -->
+    <div class="p-6 text-center bg-[#0d1321]">
+        <h2 class="text-2xl font-semibold text-[#b0b0b0]">Admin Panel</h2>
+    </div>
+    <!-- Sidebar Menu -->
+    <ul id="sidebar-menu" class="text-left p-4 text-sm">
+        <li class="my-2">
+            <a href="#" class="block text-[#f4e1d2] hover:text-white hover:shadow-lg hover:bg-[#7b2c4d] font-semibold p-2 rounded-lg transition-all duration-300 ease-in-out">
+                <i class="fas fa-tachometer-alt mr-2 text-[#b0b0b0] text-md"></i> <!-- Solid icon -->
+                <span class="font-bold ">Dashboard</span>
+            </a>
+        </li>
+        <li class="my-2">
+            <a href="{% url 'forms_list' %}" class="block text-[#f4e1d2] hover:text-white hover:shadow-lg hover:bg-[#7b2c4d] font-semibold p-2 rounded-lg transition-all duration-300 ease-in-out">
+                <i class="fas fa-file-alt mr-2 text-[#b0b0b0] text-md"></i> <!-- Solid icon -->
+                <span class="font-bold">Forms</span>
+            </a>
+        </li>
+        <li class="my-2">
+            <a href="{% url 'product_list'%}" class="block text-[#f4e1d2] hover:text-white hover:shadow-lg hover:bg-[#7b2c4d] font-semibold p-2 rounded-lg transition-all duration-300 ease-in-out">
+                <i class="fas fa-box-open mr-2 text-[#b0b0b0] text-md"></i> <!-- Solid icon -->
+                <span class="font-bold">Products</span>
+            </a>
+        </li>
+        <li class="my-2">
+            <a href="{% url 'index'%}" class="block text-[#f4e1d2] hover:text-white hover:shadow-lg hover:bg-[#7b2c4d] font-semibold p-2 rounded-lg transition-all duration-300 ease-in-out">
+                <i class="fas fa-shopping-cart mr-2 text-[#b0b0b0] text-md"></i>
+                <span class="font-bold">Orders</span>
+            </a>
+        </li>
+        <li class="my-2">
+            <a href="#" class="block text-[#f4e1d2] hover:text-white hover:shadow-lg hover:bg-[#7b2c4d] font-semibold p-2 rounded-lg transition-all duration-300 ease-in-out">
+                <i class="fas fa-users mr-2 text-[#b0b0b0] text-md"></i>
+                <span class="font-bold">Customers</span>
+            </a>
+        </li>
+        <li class="my-2">
+            <a href="#" class="block text-[#f4e1d2] hover:text-white hover:shadow-lg hover:bg-[#7b2c4d] font-semibold p-2 rounded-lg transition-all duration-300 ease-in-out">
+                <i class="fas fa-chart-line mr-2 text-[#b0b0b0] text-md"></i>
+                <span class="font-bold">Analytics</span>
+            </a>
+        </li>
+    </ul>
+</div>
+
+<script>
+// JavaScript to persist 'active' class based on current URL
+const currentUrl = window.location.href;  // Get the current page URL
+const menuItems = document.querySelectorAll('#sidebar-menu a');
+
+menuItems.forEach(item => {
+    if (item.href === currentUrl) {
+        // Add 'active' class to the link that matches the current URL
+        item.classList.add('active');
+    }
+
+    item.addEventListener('click', function() {
+        // Remove 'active' class from all menu items
+        menuItems.forEach(link => link.classList.remove('active'));
+
+        // Add 'active' class to the clicked item
+        this.classList.add('active');
+    });
+});
+
+</script>
+
+</body>
+</html>

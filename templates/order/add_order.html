@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+correct the country, and state, if the country is select, the correspond state should display
+
+{% extends 'base.html' %}
+
+{% block content %}
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<!-- Product Selection Form -->
+<form id="productForm" method="get" action="{% url 'add_order' %}">
+    <label for="product">Select Product:</label>
+    <select name="product_id" id="product" onchange="fetchProductEntries(this.value)">
+        <option value="">-- Select a product --</option>
+        {% for product in form.product.field.queryset %}
+            <option value="{{ product.id }}" {% if product.id|stringformat:"s" == selected_product_id|stringformat:"s" %}selected{% endif %}>
+                {{ product.name }}
+            </option>
+        {% endfor %}
+    </select>
+</form>
+
+<!-- Order Placement Form -->
+<form method="post" id="orderForm">
+    {% csrf_token %}
+    
+    <label for="country">Select Country:</label>
+    {{ form.country }}
+
+    <label for="state_or_region">Select State/Region:</label>
+    <select name="state_or_region" id="state_or_region">
+        <option value="">-- Select a state/region --</option>
+    </select><br>
+
+    <label for="product_entry">Select Product Entry:</label>
+    <select name="product_entry" id="product_entry">
+        <option value="">-- Select a product entry --</option>
+    </select><br>
+    
+    {{ form.customer_name.label_tag }} {{ form.customer_name }}<br>
+    {{ form.whatsapp_number.label_tag }} {{ form.whatsapp_number }}<br>
+    {{ form.phone_number.label_tag }} {{ form.phone_number }}<br>
+    {{ form.email.label_tag }} {{ form.email }}<br>
+    {{ form.address.label_tag }} {{ form.address }}<br>
+    <button type="submit">Place Order</button>
+</form>
+
+<!-- AJAX Script -->
+<script>
+    $(document).ready(function() {
+        // Fetch states based on selected country
+        $('#id_country').change(function() {
+            var countryCode = $(this).val();
+            if (countryCode) {
+                $.ajax({
+                    url: "{% url 'states' %}",  // URL for fetching states
+                    type: "GET",
+                    data: { 'country_code': countryCode },
+                    success: function(data) {
+                        // Clear existing options
+                        $('#state_or_region').empty().append('<option value="">-- Select a state/region --</option>');
+                        // Append new options
+                        $.each(data.states, function(index, state) {
+                            $('#state_or_region').append('<option value="' + state + '">' + state + '</option>');
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("AJAX Error:", status, error);
+                    }
+                });
+            } else {
+                $('#state_or_region').empty().append('<option value="">-- Select a state/region --</option>');
+            }
+        });
+    });
+
+    function fetchProductEntries(productId) {
+        if (productId) {
+            $.ajax({
+                url: "{% url 'product_entries' %}", // Update with your URL pattern
+                type: "GET",
+                data: {
+                    'product_id': productId
+                },
+                success: function(data) {
+                    // Clear existing options
+                    $('#product_entry').empty().append('<option value="">-- Select a product entry --</option>');
+                    // Append new options
+                    $.each(data, function(index, entry) {
+                        $('#product_entry').append('<option value="' + entry.id + '">' + entry.quantity + ' of ' + entry.product_name + ' at ' + entry.selling_price + '</option>');
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX Error:", status, error);
+                }
+            });
+        } else {
+            $('#product_entry').empty().append('<option value="">-- Select a product entry --</option>');
+        }
+    }
+</script>
+
+{% endblock %}
+
+
+

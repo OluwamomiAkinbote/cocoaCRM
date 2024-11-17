@@ -1,0 +1,89 @@
+<div class="relative inline-block">
+    <input type="hidden" id="csrf-token" value="{{ csrf_token }}">
+    <button id="action-button" class="flex items-center px-3 py-2 bg-gray-800 border border-gray-700 text-white rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-75 transition ease-in-out duration-200 text-sm" onclick="toggleDropdown(this)">
+        <i class="fas fa-cogs mr-2"></i> <!-- Updated icon for action button -->
+        <span>Action</span>
+    </button>
+
+    <div id="action-dropdown" class="hidden absolute left-0 w-40 bg-white shadow-md rounded border border-gray-200 z-10">
+        <div class="p-2 text-xs" onclick="event.stopPropagation();"> <!-- Prevent click event from bubbling up -->
+            <a href="{% url 'edit_order' order.id%}" class="flex items-center px-3 py-1 text-blue-600 hover:bg-blue-100 transition duration-200">
+                <i class="fas fa-edit text-blue-600 text-sm mr-2"></i> Edit
+            </a>
+            <a href="javascript:void(0);" onclick="performAction('cancel_order', '{{ order.id }}'); return false;" class="flex items-center px-3 py-1 text-red-600 hover:bg-red-100 transition duration-200">
+                <i class="fas fa-times text-red-600 text-sm mr-2"></i> Cancel
+            </a>
+            
+            {% if order.status.name != 'Deleted' %}
+                <a href="javascript:void(0);" onclick="performAction('delete_order', '{{ order.id }}'); return false;" class="flex items-center px-3 py-1 text-gray-600 hover:bg-gray-100 transition duration-200">
+                    <i class="fas fa-trash text-gray-600 text-sm mr-2"></i> Delete
+                </a>
+            {% endif %}
+
+            {% if order.status.name == 'Deleted' or order.status.name == 'Delivered' %}
+                <a href="javascript:void(0);" onclick="performAction('restore_order', '{{ order.id }}'); return false;" class="flex items-center px-3 py-1 text-green-600 hover:bg-green-100 transition duration-200">
+                    <i class="fas fa-undo text-green-600 text-sm mr-2"></i> Restore
+                </a>
+            {% endif %}
+            
+            <a href="javascript:void(0);" onclick="performAction('schedule_order', '{{ order.id }}'); return false;" class="flex items-center px-3 py-1 text-yellow-600 hover:bg-yellow-100 transition duration-200">
+                <i class="fas fa-calendar-alt text-yellow-600 text-sm mr-2"></i> Schedule
+            </a>
+            
+            <a href="javascript:void(0);" onclick="performAction('deliver_order', '{{ order.id }}'); return false;" class="flex items-center px-3 py-1 text-green-600 hover:bg-green-100 transition duration-200">
+                <i class="fas fa-truck text-green-600 text-sm mr-2"></i> Deliver
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // JavaScript function to toggle dropdown visibility
+    function toggleDropdown(button) {
+        const dropdown = button.nextElementSibling;
+        dropdown.classList.toggle('hidden');
+    }
+
+    // Close the dropdown when clicking outside of it
+    window.onclick = function(event) {
+        const dropdown = document.getElementById('action-dropdown');
+        if (!dropdown.previousElementSibling.contains(event.target) && !dropdown.contains(event.target)) {
+            dropdown.classList.add('hidden');
+        }
+    };
+
+    // Function to perform actions on orders
+    function performAction(action, orderId) {
+        const url = `/${action}/${orderId}/`; // Adjust URL according to your URL patterns
+        const button = document.getElementById('action-button');
+
+        button.disabled = true; // Disable the button to prevent multiple clicks
+
+        const csrfToken = document.getElementById('csrf-token').value; // Get CSRF token from the hidden input
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken, // Include CSRF token
+                'Content-Type': 'application/json', // Ensure correct content type
+            },
+            body: JSON.stringify({ order_id: orderId }),
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Network response was not ok.');
+        })
+        .then(data => {
+            // Handle success (e.g., update the UI or refresh the orders list)
+            location.reload(); // Reload to fetch the updated status
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        })
+        .finally(() => {
+            button.disabled = false; // Re-enable the button after operation completes
+        });
+    }
+</script>

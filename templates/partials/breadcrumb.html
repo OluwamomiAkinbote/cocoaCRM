@@ -1,0 +1,20 @@
+<nav aria-label="breadcrumb" class="py-4">
+    <ol class="flex space-x-2 text-sm">
+        {% for breadcrumb in breadcrumbs %}
+            {% if not forloop.last %}
+                <!-- Clickable breadcrumb links with margin and padding -->
+                <li class="breadcrumb-item">
+                    <a href="{{ breadcrumb.url }}" class="text-gray-600 hover:text-gray-800 transition-colors duration-200 ease-in-out px-2 py-1 rounded">
+                        {{ breadcrumb.name }}
+                    </a>
+                    <span class="text-gray-400">/</span> <!-- Separator -->
+                </li>
+            {% else %}
+                <!-- Active breadcrumb (non-clickable) with distinct style -->
+                <li class="breadcrumb-item font-semibold text-gray-800 px-2 py-1 bg-gray-200 rounded" aria-current="page">
+                    {{ breadcrumb.name }}
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ol>
+</nav>

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <h1 class="text-2xl font-bold mb-6">Add Product Entry</h1>
+
+    <form method="POST" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        {% csrf_token %}
+        <div class="mb-4">
+            <label for="product" class="block text-gray-700 text-sm font-bold mb-2">Product:</label>
+            <select id="product" name="product" class="border border-gray-300 rounded-md p-2 w-full">
+                <option value="">Select a product</option>
+                {% for product in products %}
+                    <option value="{{ product.id }}">{{ product.name }}</option>
+                {% endfor %}
+            </select>
+            {{ form.product.errors }}  <!-- Display errors for product field -->
+        </div>
+
+        <div class="mb-4">
+            <label for="quantity" class="block text-gray-700 text-sm font-bold mb-2">Quantity:</label>
+            {{ form.quantity }}
+            {{ form.quantity.errors }}  <!-- Display errors for quantity field -->
+        </div>
+
+        <div class="mb-4">
+            <label for="selling_price" class="block text-gray-700 text-sm font-bold mb-2">Selling Price:</label>
+            {{ form.selling_price }}
+            {{ form.selling_price.errors }}  <!-- Display errors for selling_price field -->
+        </div>
+
+        <div class="mb-4">
+            <label for="discount" class="block text-gray-700 text-sm font-bold mb-2">Discount:</label>
+            {{ form.discount }}
+            {{ form.discount.errors }}  <!-- Display errors for discount field -->
+        </div>
+
+        <div class="flex items-center justify-between">
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Add Entry
+            </button>
+        </div>
+    </form>
+
+    <a href="{% url 'product_list' %}" class="text-blue-500 hover:underline">Back to Product List</a>
+</div>
+{% endblock %}

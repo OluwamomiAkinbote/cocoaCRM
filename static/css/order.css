@@ -1,0 +1,32 @@
+        /* Custom styles for the table container */
+        .table-container {
+            max-height: 400px; /* Set maximum height for the table */
+            overflow-y: auto; /* Enable vertical scrolling */
+            overflow-x: auto; /* Enable horizontal scrolling */
+            border: 1px solid #ddd; /* Add a border to the table container */
+            border-radius: 8px; /* Rounded corners */
+            background-color: white; /* White background for the table */
+        }
+
+        /* Add hover effects to the table rows */
+        tbody tr:hover {
+            box-shadow: 0 7px 10px rgba(0, 0, 0, 0.3); /* Light shadow on hover */
+            background-color: #f9f9f9; /* Light background on hover */
+            transition: box-shadow 0.2s ease, background-color 0.2s ease; /* Smooth transition */
+        }
+
+        /* Styles for selected row */
+        .selected-row {
+            background-color: #cce5ff; /* Light blue background for selected row */
+        }
+
+        /* Disable hover effect on the selected row */
+        .selected-row:hover {
+            background-color: #cce5ff;
+            box-shadow: none; /* Remove shadow when row is selected */
+        }
+
+        /* Styles for the action buttons */
+        .action-button {
+            margin-right: 4px; /* Spacing between buttons */
+        }
